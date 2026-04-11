@@ -12,67 +12,34 @@
             font-family: 'IBM Plex Sans Arabic', sans-serif;
             background-color: #f1f5f9;
         }
-        [dir="rtl"] {
-            text-align: right;
-        }
-        textarea {
-            resize: none;
-        }
-        .risk-stop { background-color: #dc2626 !important; color: white !important; }
-        .risk-urgent { background-color: #f97316 !important; color: white !important; }
-        .risk-action { background-color: #facc15 !important; color: black !important; }
-        .risk-monitor { background-color: #4ade80 !important; color: black !important; }
-        .risk-none { background-color: #16a34a !important; color: white !important; }
+        [dir="rtl"] { text-align: right; }
+        textarea { resize: none; }
+        
+        /* Risk Matrix Colors - Exactly matching standard industry risk matrices */
+        .risk-stop { background-color: #dc2626 !important; color: white !important; }    /* 20-25 */
+        .risk-urgent { background-color: #f97316 !important; color: white !important; }  /* 15-16 */
+        .risk-action { background-color: #facc15 !important; color: black !important; }  /* 8-12 */
+        .risk-monitor { background-color: #4ade80 !important; color: black !important; } /* 3-6 */
+        .risk-none { background-color: #16a34a !important; color: white !important; }    /* 1-2 */
 
-        @page {
-            size: A4 landscape;
-            margin: 10mm;
-        }
+        @page { size: A4 landscape; margin: 10mm; }
 
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; padding: 0 !important; }
-            #main-container { 
-                box-shadow: none !important; 
-                width: 100% !important; 
-                max-width: 100% !important; 
-                margin: 0 !important;
-                border: none !important;
-            }
-            table { 
-                font-size: 7pt !important; 
-                border-collapse: collapse !important; 
-                width: 100% !important;
-                table-layout: fixed !important;
-            }
-            th, td { 
-                border: 1px solid #aaa !important; 
-                padding: 2px !important;
-                word-wrap: break-word !important;
-            }
-            textarea, input, select {
-                border: none !important;
-                background: transparent !important;
-                padding: 0 !important;
-            }
-            * { 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-            }
+            #main-container { box-shadow: none !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; border: none !important; }
+            table { font-size: 7pt !important; border-collapse: collapse !important; width: 100% !important; table-layout: fixed !important; }
+            th, td { border: 1px solid #aaa !important; padding: 2px !important; word-wrap: break-word !important; }
+            textarea, input, select { border: none !important; background: transparent !important; padding: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
 
-        ::placeholder {
-            color: #94a3b8;
-            opacity: 0.6;
-            font-style: italic;
-        }
+        ::placeholder { color: #94a3b8; opacity: 0.6; font-style: italic; }
     </style>
 </head>
 <body class="transition-all duration-300">
 
-    <div id="app" class="p-4 md:p-8 print:p-0">
-        <!-- App will be rendered here -->
-    </div>
+    <div id="app" class="p-4 md:p-8 print:p-0"></div>
 
     <script>
         const translations = {
@@ -105,22 +72,21 @@
                 actionStatus: "STATUS",
                 btnAddAction: "Add Another Action",
                 btnAddRow: "Add Hazard Row",
-                signAssessor: "Assessor Signature",
-                signManager: "Management Approval",
+                signAssessor: "Signature",
                 footer: "Internal Risk Assessment Document",
                 statusNotStarted: "Not Started",
                 statusInProgress: "In Progress",
                 statusCompleted: "Completed",
                 statusCancelled: "Cancelled",
-                matrixTitle: "Risk Matrix Selector",
-                matrixSubtitle: "Select score from table",
-                phHazard: "e.g., Reach stacker operating in the yard",
-                phWho: "e.g., Ground workers, tally clerks",
-                phHow: "e.g., Struck by moving vehicle",
-                phControls: "e.g., Designated walkways and speed limits.",
-                phAddControls: "e.g., Installation of proximity sensors.",
-                phActionDesc: "e.g., Install sensors on Stackers",
-                phActionOwner: "e.g., HSE Manager"
+                matrixTitle: "Risk Matrix",
+                matrixSubtitle: "L x C = R",
+                phHazard: "e.g., Cutting blade on the CNC during operation",
+                phWho: "e.g., Employees, Visitors, Contractors",
+                phHow: "e.g., Cuts and amputation",
+                phControls: "e.g., Safe system of work in place.",
+                phAddControls: "e.g., Photoelectric light curtain.",
+                phActionDesc: "e.g., Install light curtain",
+                phActionOwner: "e.g., Operations Manager"
             },
             ar: {
                 dir: 'rtl',
@@ -151,22 +117,21 @@
                 actionStatus: "الحالة",
                 btnAddAction: "إضافة إجراء آخر",
                 btnAddRow: "إضافة صف خطر",
-                signAssessor: "توقيع المقيم",
-                signManager: "اعتماد الإدارة",
+                signAssessor: "التوقيع",
                 footer: "وثيقة تقييم المخاطر الداخلية",
                 statusNotStarted: "لم يبدأ",
                 statusInProgress: "قيد التنفيذ",
                 statusCompleted: "مكتمل",
                 statusCancelled: "ملغى",
-                matrixTitle: "محدد مصفوفة المخاطر",
-                matrixSubtitle: "اختر الدرجة من الجدول",
-                phHazard: "مثال: مكدس الحاويات في الساحة",
-                phWho: "مثال: العمال الميدانيون، موظفو التعداد",
-                phHow: "مثال: الاصطدام بمركبة متحركة",
-                phControls: "مثال: ممرات مشاة مخصصة وحدود السرعة.",
-                phAddControls: "مثال: تركيب أجهزة استشعار التقارب.",
-                phActionDesc: "مثال: تركيب أجهزة استشعار في المكدسات",
-                phActionOwner: "مثال: مدير الصحة والسلامة"
+                matrixTitle: "مصفوفة المخاطر",
+                matrixSubtitle: "الاحتمالية × النتيجة = الدرجة",
+                phHazard: "مثال: شفرة القطع في آلة CNC",
+                phWho: "مثال: الموظفون والزوار",
+                phHow: "مثال: جروح وبتر",
+                phControls: "مثال: نظام عمل آمن.",
+                phAddControls: "مثال: ستارة ضوئية كهروضوئية.",
+                phActionDesc: "مثال: تركيب ستارة ضوئية",
+                phActionOwner: "مثال: مدير العمليات"
             }
         };
 
@@ -174,25 +139,13 @@
             lang: 'en',
             rows: [{
                 id: Date.now(),
-                hazard: '',
-                who: '',
-                how: '',
-                existingControls: '',
-                initialL: 1,
-                initialC: 1,
-                additionalControls: '',
-                residualL: 1,
-                residualC: 1,
+                hazard: '', who: '', how: '', existingControls: '',
+                initialL: 1, initialC: 1, additionalControls: '',
+                residualL: 1, residualC: 1,
                 actions: [{ id: Date.now(), desc: '', owner: '', deadline: '', status: 'Not Started' }]
             }],
-            headerInfo: {
-                owner: '',
-                staffId: '',
-                department: '',
-                assessmentDate: '',
-                reviewDate: ''
-            },
-            modal: null // { rowId, type }
+            headerInfo: { owner: '', staffId: '', department: '', assessmentDate: '', reviewDate: '' },
+            modal: null
         };
 
         function getRiskColor(score) {
@@ -206,7 +159,6 @@
         function render() {
             const app = document.getElementById('app');
             const t = translations[state.lang];
-            const isRtl = state.lang === 'ar';
             document.body.dir = t.dir;
 
             app.innerHTML = `
@@ -215,8 +167,7 @@
                     <!-- Toolbar -->
                     <div class="bg-slate-900 p-4 text-white flex flex-wrap gap-3 items-center justify-between no-print">
                         <div class="flex items-center gap-2 text-xl font-bold">
-                            <i data-lucide="shield-check" class="text-green-400"></i>
-                            ${t.title}
+                            <i data-lucide="shield-check" class="text-green-400"></i> ${t.title}
                         </div>
                         <div class="flex flex-wrap gap-2">
                             <button onclick="openModal(${state.rows[0].id}, 'initial')" class="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-md transition-all text-xs font-bold">
@@ -245,46 +196,38 @@
                     </div>
 
                     <div id="printable-area" class="p-4 md:p-6">
-                        <!-- Header Info -->
+                        <!-- Header -->
                         <div class="mb-6 border-b pb-6">
                             <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight mb-4">${t.formTitle}</h1>
                             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                                 ${['owner', 'staffId', 'department', 'assessmentDate', 'reviewDate'].map(field => `
                                     <div>
                                         <label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t[field]}</label>
-                                        <input 
-                                            class="w-full border-b border-slate-300 outline-none py-1 text-sm font-medium ${field === 'reviewDate' ? 'text-red-600 font-bold' : ''}" 
-                                            type="${field.includes('Date') ? 'date' : 'text'}"
-                                            value="${state.headerInfo[field]}"
-                                            onchange="updateHeader('${field}', this.value)"
-                                        >
+                                        <input class="w-full border-b border-slate-300 outline-none py-1 text-sm font-medium ${field === 'reviewDate' ? 'text-red-600 font-bold' : ''}" 
+                                               type="${field.includes('Date') ? 'date' : 'text'}" value="${state.headerInfo[field]}" onchange="updateHeader('${field}', this.value)">
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
 
-                        <!-- Main Table -->
+                        <!-- Table -->
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse border border-slate-300 text-[10.5px]">
-                                <thead class="bg-slate-100 text-slate-800 font-bold text-[8.5px] uppercase">
+                                <thead class="bg-[#d1d5db] text-slate-800 font-bold text-[8.5px] uppercase">
                                     <tr>
-                                        <th class="border border-slate-300 p-2 text-start w-[12%]" rowspan="2">${t.colHazard}</th>
-                                        <th class="border border-slate-300 p-2 text-start w-[10%]" rowspan="2">${t.colWho}</th>
-                                        <th class="border border-slate-300 p-2 text-start w-[10%]" rowspan="2">${t.colHow}</th>
-                                        <th class="border border-slate-300 p-2 text-start w-[12%]" rowspan="2">${t.colControls}</th>
-                                        <th class="border border-slate-300 p-0.5 text-center" colspan="3">${t.colRating}</th>
-                                        <th class="border border-slate-300 p-2 text-start w-[12%]" rowspan="2">${t.colAddControls}</th>
-                                        <th class="border border-slate-300 p-0.5 text-center" colspan="3">${t.colResidual}</th>
-                                        <th class="border border-slate-300 p-2 text-center min-w-[450px]" rowspan="2">${t.colAction}</th>
-                                        <th class="border border-slate-300 p-1 no-print w-8" rowspan="2"></th>
+                                        <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colHazard}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[10%]" rowspan="2">${t.colWho}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[10%]" rowspan="2">${t.colHow}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colControls}</th>
+                                        <th class="border border-slate-400 p-0.5 text-center" colspan="3">${t.colRating}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colAddControls}</th>
+                                        <th class="border border-slate-400 p-0.5 text-center" colspan="3">${t.colResidual}</th>
+                                        <th class="border border-slate-400 p-2 text-center min-w-[450px]" rowspan="2">${t.colAction}</th>
+                                        <th class="border border-slate-400 p-1 no-print w-8" rowspan="2"></th>
                                     </tr>
-                                    <tr>
-                                        <th class="border border-slate-300 p-0.5 text-center w-6">L</th>
-                                        <th class="border border-slate-300 p-0.5 text-center w-6">C</th>
-                                        <th class="border border-slate-300 p-0.5 text-center w-8">R</th>
-                                        <th class="border border-slate-300 p-0.5 text-center w-6">L</th>
-                                        <th class="border border-slate-300 p-0.5 text-center w-6">C</th>
-                                        <th class="border border-slate-300 p-0.5 text-center w-8">R</th>
+                                    <tr class="text-center">
+                                        <th class="border border-slate-400">L</th><th class="border border-slate-400">C</th><th class="border border-slate-400">R</th>
+                                        <th class="border border-slate-400">L</th><th class="border border-slate-400">C</th><th class="border border-slate-400">R</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -293,33 +236,23 @@
                                         const residualR = row.residualL * row.residualC;
                                         return `
                                             <tr class="align-top hover:bg-slate-50 transition-colors">
-                                                <td class="border border-slate-300 p-1">
-                                                    <textarea onchange="updateRow(${row.id}, 'hazard', this.value)" placeholder="${t.phHazard}" class="w-full bg-transparent outline-none p-1" rows="6">${row.hazard}</textarea>
-                                                </td>
-                                                <td class="border border-slate-300 p-1">
-                                                    <textarea onchange="updateRow(${row.id}, 'who', this.value)" placeholder="${t.phWho}" class="w-full bg-transparent outline-none p-1" rows="6">${row.who}</textarea>
-                                                </td>
-                                                <td class="border border-slate-300 p-1">
-                                                    <textarea onchange="updateRow(${row.id}, 'how', this.value)" placeholder="${t.phHow}" class="w-full bg-transparent outline-none p-1" rows="6">${row.how}</textarea>
-                                                </td>
-                                                <td class="border border-slate-300 p-1">
-                                                    <textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" placeholder="${t.phControls}" class="w-full bg-transparent outline-none p-1" rows="6">${row.existingControls}</textarea>
-                                                </td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'hazard', this.value)" placeholder="${t.phHazard}" class="w-full bg-transparent outline-none p-1" rows="6">${row.hazard}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'who', this.value)" placeholder="${t.phWho}" class="w-full bg-transparent outline-none p-1" rows="6">${row.who}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'how', this.value)" placeholder="${t.phHow}" class="w-full bg-transparent outline-none p-1" rows="6">${row.how}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" placeholder="${t.phControls}" class="w-full bg-transparent outline-none p-1" rows="6">${row.existingControls}</textarea></td>
                                                 
-                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 p-0 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialL}</td>
-                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 p-0 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialC}</td>
-                                                <td class="border border-slate-300 p-0 text-center font-black align-middle ${getRiskColor(initialR)}">${initialR}</td>
+                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialL}</td>
+                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialC}</td>
+                                                <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(initialR)}">${initialR}</td>
 
-                                                <td class="border border-slate-300 p-1">
-                                                    <textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" placeholder="${t.phAddControls}" class="w-full bg-transparent outline-none p-1" rows="6">${row.additionalControls}</textarea>
-                                                </td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" placeholder="${t.phAddControls}" class="w-full bg-transparent outline-none p-1" rows="6">${row.additionalControls}</textarea></td>
 
-                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 p-0 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualL}</td>
-                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 p-0 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualC}</td>
-                                                <td class="border border-slate-300 p-0 text-center font-black align-middle ${getRiskColor(residualR)}">${residualR}</td>
+                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualL}</td>
+                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualC}</td>
+                                                <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(residualR)}">${residualR}</td>
 
                                                 <td class="border border-slate-300 p-1 bg-slate-50/40 text-center align-middle">
-                                                    <div class="flex bg-slate-200 p-1 text-[7px] font-bold text-slate-600 rounded mb-1.5 mx-auto max-w-lg">
+                                                    <div class="flex bg-slate-200 p-1 text-[7px] font-bold text-slate-600 rounded mb-1.5 mx-auto max-w-[440px]">
                                                         <div class="flex-1 px-1">${t.actionDesc}</div>
                                                         <div class="w-20 px-1">${t.actionOwner}</div>
                                                         <div class="w-24 px-1">${t.actionDeadline}</div>
@@ -328,11 +261,11 @@
                                                     </div>
                                                     <div class="flex flex-col items-center">
                                                         ${row.actions.map(action => `
-                                                            <div class="flex flex-row items-center gap-1 p-1 bg-white border border-slate-200 rounded-sm shadow-sm mb-1 w-full max-w-lg">
-                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'desc', this.value)" placeholder="${t.phActionDesc}" value="${action.desc}" class="flex-1 text-[9px] outline-none">
-                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'owner', this.value)" placeholder="${t.phActionOwner}" value="${action.owner}" class="w-20 text-[9px] outline-none border-l border-slate-100 px-1 text-center">
-                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'deadline', this.value)" type="date" value="${action.deadline}" class="w-24 text-[8.5px] outline-none border-l border-slate-100 px-1">
-                                                                <select onchange="updateAction(${row.id}, ${action.id}, 'status', this.value)" class="w-24 text-[8pt] outline-none font-bold bg-transparent border-l border-slate-100 text-center cursor-pointer">
+                                                            <div class="flex flex-row items-center gap-1 p-1 bg-white border border-slate-200 rounded-sm mb-1 w-full max-w-[440px]">
+                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'desc', this.value)" value="${action.desc}" class="flex-1 text-[9px] outline-none">
+                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'owner', this.value)" value="${action.owner}" class="w-20 text-[9px] outline-none border-l text-center">
+                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'deadline', this.value)" type="date" value="${action.deadline}" class="w-24 text-[8px] outline-none border-l px-1">
+                                                                <select onchange="updateAction(${row.id}, ${action.id}, 'status', this.value)" class="w-24 text-[8pt] outline-none font-bold border-l bg-transparent cursor-pointer text-center">
                                                                     <option value="Not Started" ${action.status === 'Not Started' ? 'selected' : ''}>${t.statusNotStarted}</option>
                                                                     <option value="In Progress" ${action.status === 'In Progress' ? 'selected' : ''}>${t.statusInProgress}</option>
                                                                     <option value="Completed" ${action.status === 'Completed' ? 'selected' : ''}>${t.statusCompleted}</option>
@@ -344,10 +277,7 @@
                                                         <button onclick="addAction(${row.id})" class="no-print mt-1 text-[8.5px] font-bold text-slate-500 flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> ${t.btnAddAction}</button>
                                                     </div>
                                                 </td>
-
-                                                <td class="border border-slate-300 p-1 text-center no-print align-middle">
-                                                    <button onclick="removeRow(${row.id})" class="text-slate-200 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                                                </td>
+                                                <td class="border border-slate-300 p-1 text-center no-print align-middle"><button onclick="removeRow(${row.id})" class="text-slate-200 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                                             </tr>
                                         `;
                                     }).join('')}
@@ -355,49 +285,75 @@
                             </table>
                         </div>
 
-                        <!-- Footer Section with Signatures -->
-                        <div class="mt-8 flex justify-between items-end">
-                            <button onclick="addRow()" class="bg-slate-900 text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm no-print">
-                                <i data-lucide="plus" class="w-4 h-4"></i> ${t.btnAddRow}
-                            </button>
-                            <div class="grid grid-cols-2 gap-20 w-80 pr-10">
-                                <div class="text-center">
-                                    <div class="border-b-2 border-slate-900 h-10 w-full mb-1"></div>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">${t.signAssessor}</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="border-b-2 border-slate-200 h-10 w-full mb-1"></div>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">${t.signManager}</p>
-                                </div>
+                        <!-- Footer Signatures -->
+                        <div class="mt-8 flex flex-col items-start gap-4">
+                            <div class="w-full">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Review date</label>
+                                <div class="w-64 border-b border-black h-6"></div>
                             </div>
+                            <div class="w-full">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">${t.signAssessor}</label>
+                                <div class="w-96 border-b border-black h-6"></div>
+                            </div>
+                            <button onclick="addRow()" class="bg-slate-900 text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm no-print mt-4"><i data-lucide="plus" class="w-4 h-4"></i> ${t.btnAddRow}</button>
                         </div>
-                    </div>
-                    
-                    <div class="bg-slate-50 p-6 text-center text-[9px] text-slate-400 border-t print:block hidden">
-                        ${t.footer} • Generated for: ${state.headerInfo.owner || 'N/A'} • ${t.dept}: ${state.headerInfo.department || 'N/A'}
                     </div>
                 </div>
 
-                <!-- Score Matrix Modal -->
+                <!-- Risk Matrix Modal -->
                 ${state.modal ? `
                     <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm no-print">
-                        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden border">
-                            <div class="bg-slate-900 p-4 text-white flex justify-between items-center">
-                                <h3 class="font-bold flex items-center gap-2"><i data-lucide="table"></i> ${t.matrixTitle}</h3>
-                                <button onclick="closeModal()"><i data-lucide="x"></i></button>
+                        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full flex flex-col md:flex-row overflow-hidden border">
+                            <div class="flex-1 p-8 bg-white">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="font-bold text-slate-800 text-lg uppercase tracking-wider">${t.matrixTitle}</h3>
+                                    <button onclick="closeModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="flex flex-col justify-center items-center font-bold text-[10px] text-slate-500 uppercase vertical-text">
+                                        <i data-lucide="arrow-up" class="w-3 h-3 mb-1"></i>
+                                        <span style="writing-mode: vertical-lr; transform: rotate(180deg);">INCREASING CONSEQUENCE</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="grid grid-cols-6 gap-1.5" dir="ltr">
+                                            ${[5,4,3,2,1].map(c => `
+                                                <div class="flex items-center justify-center font-black text-xl text-red-600">${c}</div>
+                                                ${[1,2,3,4,5].map(l => {
+                                                    const score = l * c;
+                                                    return `<button onclick="setScore(${l}, ${c})" class="aspect-square rounded shadow-sm font-black text-2xl hover:scale-105 transition-transform ${getRiskColor(score)}">${score}</button>`;
+                                                }).join('')}
+                                            `).join('')}
+                                            <div></div>
+                                            ${[1,2,3,4,5].map(l => `<div class="text-center font-black text-xl text-indigo-800 pt-2">${l}</div>`).join('')}
+                                        </div>
+                                        <div class="flex items-center justify-center font-bold text-[10px] text-slate-500 uppercase mt-4 gap-2">
+                                            INCREASING LIKELIHOOD <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="p-8">
-                                <p class="text-[10px] text-slate-400 mb-6 text-center font-bold tracking-widest uppercase">${t.matrixSubtitle}</p>
-                                <div class="grid grid-cols-6 gap-1.5" dir="ltr">
-                                    <div class="flex items-center justify-center text-[10px] font-black text-slate-300">C \ L</div>
-                                    ${[1,2,3,4,5].map(l => `<div class="text-center font-bold text-[10px]">L: ${l}</div>`).join('')}
-                                    ${[5,4,3,2,1].map(c => `
-                                        <div class="flex items-center justify-center font-bold text-[10px]">C: ${c}</div>
-                                        ${[1,2,3,4,5].map(l => {
-                                            const score = l * c;
-                                            return `<button onclick="setScore(${l}, ${c})" class="aspect-square rounded shadow-sm font-black text-xl hover:scale-110 transition-transform ${getRiskColor(score)}">${score}</button>`;
-                                        }).join('')}
-                                    `).join('')}
+                            <div class="w-full md:w-80 bg-slate-50 p-8 border-l border-slate-200">
+                                <div class="space-y-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-12 h-10 risk-stop rounded flex items-center justify-center font-black text-white">20-25</div>
+                                        <div><p class="font-bold text-red-700 text-sm">Stop</p><p class="text-[9px] text-slate-500">stop activity and immediate action</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-12 h-10 risk-urgent rounded flex items-center justify-center font-black text-white">15-16</div>
+                                        <div><p class="font-bold text-orange-700 text-sm">Urgent action</p><p class="text-[9px] text-slate-500">take immediate action and stop activity if necessary</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-12 h-10 risk-action rounded flex items-center justify-center font-black">8-12</div>
+                                        <div><p class="font-bold text-yellow-700 text-sm">Action</p><p class="text-[9px] text-slate-500">improve within specified timescale</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-12 h-10 risk-monitor rounded flex items-center justify-center font-black">3-6</div>
+                                        <div><p class="font-bold text-green-700 text-sm">Monitor</p><p class="text-[9px] text-slate-500">look to improve at next review</p></div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-12 h-10 risk-none rounded flex items-center justify-center font-black text-white">1-2</div>
+                                        <div><p class="font-bold text-green-800 text-sm">No action</p><p class="text-[9px] text-slate-500">no further action, but ensure controls are maintained</p></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -407,121 +363,21 @@
             lucide.createIcons();
         }
 
-        // Logic Functions
-        function toggleLang() {
-            state.lang = state.lang === 'en' ? 'ar' : 'en';
-            render();
-        }
+        function toggleLang() { state.lang = state.lang === 'en' ? 'ar' : 'en'; render(); }
+        function updateHeader(f, v) { state.headerInfo[f] = v; }
+        function addRow() { state.rows.push({ id: Date.now(), hazard: '', who: '', how: '', existingControls: '', initialL: 1, initialC: 1, additionalControls: '', residualL: 1, residualC: 1, actions: [{ id: Date.now(), desc: '', owner: '', deadline: '', status: 'Not Started' }] }); render(); }
+        function removeRow(id) { if (state.rows.length > 1) { state.rows = state.rows.filter(r => r.id !== id); render(); } }
+        function updateRow(id, f, v) { state.rows = state.rows.map(r => r.id === id ? {...r, [f]: v} : r); }
+        function addAction(rId) { state.rows = state.rows.map(r => { if (r.id === rId) r.actions.push({ id: Date.now(), desc: '', owner: '', deadline: '', status: 'Not Started' }); return r; }); render(); }
+        function removeAction(rId, aId) { state.rows = state.rows.map(r => { if (r.id === rId && r.actions.length > 1) r.actions = r.actions.filter(a => a.id !== aId); return r; }); render(); }
+        function updateAction(rId, aId, f, v) { state.rows = state.rows.map(r => { if (r.id === rId) r.actions = r.actions.map(a => a.id === aId ? {...a, [f]: v} : a); return r; }); }
+        function openModal(rId, type) { state.modal = { rId, type }; render(); }
+        function closeModal() { state.modal = null; render(); }
+        function setScore(l, c) { const { rId, type } = state.modal; state.rows = state.rows.map(r => r.id === rId ? {...r, [type+'L']: l, [type+'C']: c} : r); closeModal(); }
+        
+        function exportJson() { const d = JSON.stringify(state); const b = new Blob([d], {type: 'application/json'}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `Risk_Data_${new Date().toISOString().split('T')[0]}.json`; a.click(); }
+        function importJson(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (ev) => { try { const d = JSON.parse(ev.target.result); Object.assign(state, d); render(); } catch (err) { alert("Invalid file"); } }; r.readAsText(f); e.target.value = ''; }
 
-        function updateHeader(field, val) {
-            state.headerInfo[field] = val;
-        }
-
-        function addRow() {
-            state.rows.push({
-                id: Date.now(),
-                hazard: '', who: '', how: '', existingControls: '',
-                initialL: 1, initialC: 1, additionalControls: '',
-                residualL: 1, residualC: 1,
-                actions: [{ id: Date.now(), desc: '', owner: '', deadline: '', status: 'Not Started' }]
-            });
-            render();
-        }
-
-        function removeRow(id) {
-            if (state.rows.length > 1) {
-                state.rows = state.rows.filter(r => r.id !== id);
-                render();
-            }
-        }
-
-        function updateRow(id, field, val) {
-            state.rows = state.rows.map(r => r.id === id ? {...r, [field]: val} : r);
-        }
-
-        function addAction(rowId) {
-            state.rows = state.rows.map(r => {
-                if (r.id === rowId) {
-                    r.actions.push({ id: Date.now(), desc: '', owner: '', deadline: '', status: 'Not Started' });
-                }
-                return r;
-            });
-            render();
-        }
-
-        function removeAction(rowId, actionId) {
-            state.rows = state.rows.map(r => {
-                if (r.id === rowId && r.actions.length > 1) {
-                    r.actions = r.actions.filter(a => a.id !== actionId);
-                }
-                return r;
-            });
-            render();
-        }
-
-        function updateAction(rowId, actionId, field, val) {
-            state.rows = state.rows.map(r => {
-                if (r.id === rowId) {
-                    r.actions = r.actions.map(a => a.id === actionId ? {...a, [field]: val} : a);
-                }
-                return r;
-            });
-        }
-
-        function openModal(rowId, type) {
-            state.modal = { rowId, type };
-            render();
-        }
-
-        function closeModal() {
-            state.modal = null;
-            render();
-        }
-
-        function setScore(l, c) {
-            const { rowId, type } = state.modal;
-            state.rows = state.rows.map(r => r.id === rowId ? {...r, [type+'L']: l, [type+'C']: c} : r);
-            closeModal();
-        }
-
-        // JSON Save/Restore
-        function exportJson() {
-            const data = JSON.stringify({
-                headerInfo: state.headerInfo,
-                rows: state.rows
-            }, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Risk_Assessment_Data_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importJson(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (imported.headerInfo && imported.rows) {
-                        state.headerInfo = imported.headerInfo;
-                        state.rows = imported.rows;
-                        render();
-                    } else {
-                        alert("Invalid JSON format");
-                    }
-                } catch (err) {
-                    alert("Error parsing JSON file");
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = ''; // Reset input
-        }
-
-        // Existing Export Functions (XLS/DOC)
         function generateExportHTML() {
             const t = translations[state.lang];
             const isRtl = state.lang === 'ar';
@@ -529,19 +385,19 @@
                 <html dir="${t.dir}">
                 <head><meta charset="UTF-8"><style>
                     table { border-collapse: collapse; width: 100%; font-family: sans-serif; }
-                    th, td { border: 1px solid #333; padding: 4px; font-size: 8.5pt; text-align: ${isRtl ? 'right' : 'left'}; vertical-align: top; }
-                    .header { background: #0f172a; color: white; font-weight: bold; text-align: center; }
-                    .risk-stop { background: #dc2626 !important; color: white !important; }
-                    .risk-urgent { background: #f97316 !important; color: white !important; }
-                    .risk-action { background: #facc15 !important; }
-                    .risk-monitor { background: #4ade80 !important; }
-                    .risk-none { background: #16a34a !important; color: white !important; }
+                    th, td { border: 1px solid #333; padding: 4px; font-size: 8pt; text-align: ${isRtl ? 'right' : 'left'}; vertical-align: top; }
+                    .header { background: #d1d5db; font-weight: bold; text-align: center; }
+                    .risk-stop { background: #dc2626; color: white; }
+                    .risk-urgent { background: #f97316; color: white; }
+                    .risk-action { background: #facc15; }
+                    .risk-monitor { background: #4ade80; }
+                    .risk-none { background: #16a34a; color: white; }
                 </style></head>
                 <body>
                     <h1 style="text-align:center">${t.formTitle}</h1>
                     <table>
                         <tr><td><b>${t.owner}</b>: ${state.headerInfo.owner}</td><td><b>${t.staffId}</b>: ${state.headerInfo.staffId}</td><td><b>${t.dept}</b>: ${state.headerInfo.department}</td></tr>
-                        <tr><td><b>${t.assessDate}</b>: ${state.headerInfo.assessmentDate}</td><td><b style="color:red">${t.reviewDate}</b>: ${state.headerInfo.reviewDate}</td><td></td></tr>
+                        <tr><td><b>${t.assessDate}</b>: ${state.headerInfo.assessmentDate}</td><td><b style="color:red">Review Date</b>: ${state.headerInfo.reviewDate}</td><td></td></tr>
                     </table><br/>
                     <table>
                         <tr class="header">
@@ -553,57 +409,30 @@
                             <tr>
                                 <td>${r.hazard}</td><td>${r.who}</td><td>${r.how}</td><td>${r.existingControls}</td>
                                 <td align="center">${r.initialL}</td><td align="center">${r.initialC}</td>
-                                <td align="center" style="background-color: ${initialColor(r.initialL * r.initialC)}" class="${getRiskColor(r.initialL * r.initialC)}">${r.initialL * r.initialC}</td>
+                                <td align="center" style="background-color: ${getColorHex(r.initialL * r.initialC)}; color: ${r.initialL * r.initialC >= 15 ? 'white' : 'black'}">${r.initialL * r.initialC}</td>
                                 <td>${r.additionalControls}</td>
                                 <td align="center">${r.residualL}</td><td align="center">${r.residualC}</td>
-                                <td align="center" style="background-color: ${initialColor(r.residualL * r.residualC)}" class="${getRiskColor(r.residualL * r.residualC)}">${r.residualL * r.residualC}</td>
+                                <td align="center" style="background-color: ${getColorHex(r.residualL * r.residualC)}; color: ${r.residualL * r.residualC >= 15 ? 'white' : 'black'}">${r.residualL * r.residualC}</td>
                                 <td>${r.actions.map(a => `• ${a.desc} [${a.owner}] (${a.deadline}) - ${a.status}`).join('<br/>')}</td>
                             </tr>
                         `).join('')}
                     </table>
                     <br/><br/>
-                    <table style="border:none">
-                        <tr>
-                            <td style="border:none; border-bottom:2px solid black; width:45%"></td>
-                            <td style="border:none; width:10%"></td>
-                            <td style="border:none; border-bottom:2px solid black; width:45%"></td>
-                        </tr>
-                        <tr>
-                            <td style="border:none; text-align:center; font-weight:bold">${t.signAssessor}</td>
-                            <td style="border:none"></td>
-                            <td style="border:none; text-align:center; font-weight:bold">${t.signManager}</td>
-                        </tr>
-                    </table>
+                    <div style="font-weight:bold; font-size:10pt;">Signature: __________________________</div>
                 </body></html>`;
         }
 
-        function initialColor(score) {
-            if (score >= 20) return '#dc2626';
-            if (score >= 15) return '#f97316';
-            if (score >= 8) return '#facc15';
-            if (score >= 3) return '#4ade80';
+        function getColorHex(s) {
+            if (s >= 20) return '#dc2626';
+            if (s >= 15) return '#f97316';
+            if (s >= 8) return '#facc15';
+            if (s >= 3) return '#4ade80';
             return '#16a34a';
         }
 
-        function exportXls() {
-            const blob = new Blob([generateExportHTML()], { type: 'application/vnd.ms-excel' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Risk_Assessment.xls';
-            a.click();
-        }
+        function exportXls() { const b = new Blob([generateExportHTML()], {type: 'application/vnd.ms-excel'}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'Risk_Assessment.xls'; a.click(); }
+        function exportDoc() { const b = new Blob(['\ufeff', generateExportHTML()], {type: 'application/msword'}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'Risk_Assessment.doc'; a.click(); }
 
-        function exportDoc() {
-            const blob = new Blob(['\ufeff', generateExportHTML()], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Risk_Assessment.doc';
-            a.click();
-        }
-
-        // Init
         render();
     </script>
 </body>

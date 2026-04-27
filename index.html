@@ -52,10 +52,11 @@
                 colHazard: "What is the hazard?", colWho: "Who might be harmed?", colHow: "How might people be harmed?",
                 colControls: "Existing risk control measures", colRating: "Risk rating",
                 colAddControls: "Additional controls", colResidual: "New risk rating",
-                colActionBy: "Action/monitored by whom?", colActionWhen: "Action/monitored by when?",
-                actionDesc: "ACTION DESCRIPTION", statusNotStarted: "Not Started", 
-                statusInProgress: "In Progress", statusCompleted: "Completed", statusCancelled: "Cancelled",
-                matrixTitle: "Risk Matrix", signAssessor: "Signature", footer: "Internal Risk Assessment Document"
+                colActionPlan: "Action Plan", actionDesc: "ACTION DESCRIPTION",
+                actionOwner: "OWNER", actionDeadline: "DEADLINE", actionStatus: "STATUS",
+                btnAddAction: "Add Action", btnAddRow: "Add Row", signAssessor: "Signature",
+                statusNotStarted: "Not Started", statusInProgress: "In Progress", statusCompleted: "Completed", statusCancelled: "Cancelled",
+                matrixTitle: "Risk Matrix", footer: "Internal Risk Assessment Document"
             },
             ar: {
                 dir: 'rtl', title: "بوابة تقييم المخاطر", formTitle: "نموذج تقييم المخاطر",
@@ -67,10 +68,11 @@
                 colHazard: "ما هو الخطر؟", colWho: "من قد يتضرر؟", colHow: "كيف يتضرر الناس؟",
                 colControls: "تدابير المراقبة الحالية", colRating: "التقييم",
                 colAddControls: "ضوابط إضافية", colResidual: "التقييم الجديد",
-                colActionBy: "من يراقب؟", colActionWhen: "متى يراقب؟",
-                actionDesc: "وصف الإجراء", statusNotStarted: "لم يبدأ", 
-                statusInProgress: "قيد التنفيذ", statusCompleted: "مكتمل", statusCancelled: "ملغى",
-                matrixTitle: "مصفوفة المخاطر", signAssessor: "التوقيع", footer: "وثيقة تقييم المخاطر"
+                colActionPlan: "خطة العمل", actionDesc: "وصف الإجراء",
+                actionOwner: "المسؤول", actionDeadline: "الموعد النهائي", actionStatus: "الحالة",
+                btnAddAction: "إضافة إجراء", btnAddRow: "إضافة صف", signAssessor: "التوقيع",
+                statusNotStarted: "لم يبدأ", statusInProgress: "قيد التنفيذ", statusCompleted: "مكتمل", statusCancelled: "ملغى",
+                matrixTitle: "مصفوفة المخاطر", footer: "وثيقة تقييم المخاطر"
             }
         };
 
@@ -79,8 +81,7 @@
             rows: [{
                 id: Date.now(), hazard: '', who: '', how: '', existingControls: '',
                 initialL: 1, initialC: 1, additionalControls: '', residualL: 1, residualC: 1,
-                actions: [{ id: Date.now(), desc: '', owner: '', status: 'Not Started' }],
-                actionDeadline: ''
+                actions: [{ id: Date.now(), desc: '', owner: '', deadline: '', status: 'Not Started' }]
             }],
             headerInfo: { owner: '', workActivity: '', participants: '', description: '', raNumber: '', assessDate: '', reviewDate: '' },
             modal: null
@@ -126,88 +127,97 @@
                     <div id="printable-area" class="p-6">
                         <h1 class="text-2xl font-black text-slate-800 uppercase mb-6">${t.formTitle}</h1>
                         
-                        <!-- Row 1: Owner | Work Activity | Participants -->
+                        <!-- Header Row 1: Owner | Work Activity | Participants -->
                         <div class="grid grid-cols-3 gap-6 mb-4">
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase">${t.owner}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.owner}" onchange="updateHeader('owner', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase">${t.workActivity}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.workActivity}" onchange="updateHeader('workActivity', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase">${t.participants}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.participants}" onchange="updateHeader('participants', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.owner}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.owner}" onchange="updateHeader('owner', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.workActivity}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.workActivity}" onchange="updateHeader('workActivity', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.participants}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.participants}" onchange="updateHeader('participants', this.value)"></div>
                         </div>
 
-                        <!-- Row 2: Description | RA Number | Assess Date | Review Date -->
+                        <!-- Header Row 2: Description | RA Number | Dates -->
                         <div class="grid grid-cols-4 gap-6 mb-8">
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase">${t.description}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.description}" onchange="updateHeader('description', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase">${t.raNumber}</label><input class="w-full border-b border-slate-200 outline-none py-1 font-bold" value="${state.headerInfo.raNumber}" onchange="updateHeader('raNumber', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase">${t.assessDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.assessDate}" onchange="updateHeader('assessDate', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase text-red-600">${t.reviewDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1 text-red-600 font-bold" value="${state.headerInfo.reviewDate}" onchange="updateHeader('reviewDate', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.description}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.description}" onchange="updateHeader('description', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.raNumber}</label><input class="w-full border-b border-slate-200 outline-none py-1 font-bold" value="${state.headerInfo.raNumber}" onchange="updateHeader('raNumber', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.assessDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.assessDate}" onchange="updateHeader('assessDate', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest text-red-600">${t.reviewDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1 text-red-600 font-bold" value="${state.headerInfo.reviewDate}" onchange="updateHeader('reviewDate', this.value)"></div>
                         </div>
 
-                        <table class="w-full border-collapse border border-slate-300 text-[10.5px]">
-                            <thead class="bg-slate-200 uppercase font-bold text-[8.5px]">
-                                <tr>
-                                    <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colHazard}</th>
-                                    <th class="border border-slate-400 p-2 text-start w-[10%]" rowspan="2">${t.colWho}</th>
-                                    <th class="border border-slate-400 p-2 text-start w-[10%]" rowspan="2">${t.colHow}</th>
-                                    <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colControls}</th>
-                                    <th class="border border-slate-400 p-0.5 text-center" colspan="3">${t.colRating}</th>
-                                    <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colAddControls}</th>
-                                    <th class="border border-slate-400 p-0.5 text-center" colspan="3">${t.colResidual}</th>
-                                    <th class="border border-slate-400 p-2 text-center" rowspan="2">${t.colActionBy}</th>
-                                    <th class="border border-slate-400 p-2 text-center" rowspan="2">${t.colActionWhen}</th>
-                                    <th class="no-print w-8 border-l border-slate-300" rowspan="2"></th>
-                                </tr>
-                                <tr class="text-center">
-                                    <th class="border border-slate-400 w-8">L</th><th class="border border-slate-400 w-8">C</th><th class="border border-slate-400 w-10">R</th>
-                                    <th class="border border-slate-400 w-8">L</th><th class="border border-slate-400 w-8">C</th><th class="border border-slate-400 w-10">R</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${state.rows.map(row => {
-                                    const r1 = Number(row.initialL) * Number(row.initialC);
-                                    const r2 = Number(row.residualL) * Number(row.residualC);
-                                    return `
-                                        <tr class="align-top hover:bg-slate-50 transition-colors">
-                                            <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'hazard', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.hazard}</textarea></td>
-                                            <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'who', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.who}</textarea></td>
-                                            <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'how', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.how}</textarea></td>
-                                            <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.existingControls}</textarea></td>
-                                            
-                                            <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialL}</td>
-                                            <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialC}</td>
-                                            <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r1)}">${r1}</td>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse border border-slate-300 text-[10.5px]">
+                                <thead class="bg-slate-200 uppercase font-bold text-[8.5px]">
+                                    <tr>
+                                        <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colHazard}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[10%]" rowspan="2">${t.colWho}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[10%]" rowspan="2">${t.colHow}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colControls}</th>
+                                        <th class="border border-slate-400 p-0.5 text-center" colspan="3">${t.colRating}</th>
+                                        <th class="border border-slate-400 p-2 text-start w-[12%]" rowspan="2">${t.colAddControls}</th>
+                                        <th class="border border-slate-400 p-0.5 text-center" colspan="3">${t.colResidual}</th>
+                                        <th class="border border-slate-400 p-2 text-center min-w-[450px]" rowspan="2">${t.colActionPlan}</th>
+                                        <th class="no-print w-8 border-l border-slate-300" rowspan="2"></th>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <th class="border border-slate-400 w-8">L</th><th class="border border-slate-400 w-8">C</th><th class="border border-slate-400 w-10">R</th>
+                                        <th class="border border-slate-400 w-8">L</th><th class="border border-slate-400 w-8">C</th><th class="border border-slate-400 w-10">R</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${state.rows.map(row => {
+                                        const r1 = Number(row.initialL) * Number(row.initialC);
+                                        const r2 = Number(row.residualL) * Number(row.residualC);
+                                        return `
+                                            <tr class="align-top hover:bg-slate-50 transition-colors">
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'hazard', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.hazard}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'who', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.who}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'how', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.how}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.existingControls}</textarea></td>
+                                                
+                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialL}</td>
+                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialC}</td>
+                                                <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r1)}">${r1}</td>
 
-                                            <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.additionalControls}</textarea></td>
+                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.additionalControls}</textarea></td>
 
-                                            <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualL}</td>
-                                            <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualC}</td>
-                                            <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r2)}">${r2}</td>
+                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualL}</td>
+                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualC}</td>
+                                                <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r2)}">${r2}</td>
 
-                                            <td class="border border-slate-300 p-1 bg-slate-50 text-center align-middle">
-                                                <div class="flex flex-col items-center gap-1">
-                                                    ${row.actions.map(a => `
-                                                        <div class="flex items-center gap-1 w-full max-w-[220px] border border-slate-200 p-0.5 rounded bg-white">
-                                                            <input onchange="updateAction(${row.id}, ${a.id}, 'owner', this.value)" value="${a.owner}" class="flex-1 text-[9px] outline-none text-center bg-transparent">
-                                                            <select onchange="updateAction(${row.id}, ${a.id}, 'status', this.value)" class="text-[8px] font-bold p-1 rounded outline-none cursor-pointer transition-colors ${getStatusClass(a.status)}">
-                                                                <option value="Not Started" class="bg-white text-slate-700" ${a.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
-                                                                <option value="In Progress" class="bg-white text-slate-700" ${a.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                                                                <option value="Completed" class="bg-white text-slate-700" ${a.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                                                <option value="Cancelled" class="bg-white text-slate-700" ${a.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                                                            </select>
-                                                        </div>
-                                                    `).join('')}
-                                                    <button onclick="addAction(${row.id})" class="no-print text-[8px] font-bold text-blue-600 hover:underline mt-1">+ Add Action</button>
-                                                </div>
-                                            </td>
-                                            <td class="border border-slate-300 text-center align-middle p-1">
-                                                <input type="date" onchange="updateRow(${row.id}, 'actionDeadline', this.value)" value="${row.actionDeadline || ''}" class="text-[9px] outline-none text-center bg-transparent w-24">
-                                            </td>
-                                            <td class="no-print p-2 text-center align-middle border-l border-slate-300">
-                                                <button onclick="removeRow(${row.id})" class="text-slate-300 hover:text-red-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                                            </td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
+                                                <!-- Action Plan Column -->
+                                                <td class="border border-slate-300 p-1 bg-slate-50/40 text-center align-middle">
+                                                    <div class="flex bg-slate-200 p-1 text-[7px] font-bold text-slate-600 rounded mb-1.5 mx-auto max-w-[440px]">
+                                                        <div class="flex-1 px-1">${t.actionDesc}</div>
+                                                        <div class="w-20 px-1">${t.actionOwner}</div>
+                                                        <div class="w-24 px-1">${t.actionDeadline}</div>
+                                                        <div class="w-24 px-1">${t.actionStatus}</div>
+                                                        <div class="w-6 no-print"></div>
+                                                    </div>
+                                                    <div class="flex flex-col items-center">
+                                                        ${row.actions.map(action => `
+                                                            <div class="flex flex-row items-center gap-1 p-1 bg-white border border-slate-200 rounded-sm mb-1 w-full max-w-[440px]">
+                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'desc', this.value)" value="${action.desc}" class="flex-1 text-[9px] outline-none">
+                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'owner', this.value)" value="${action.owner}" class="w-20 text-[9px] outline-none border-l text-center">
+                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'deadline', this.value)" type="date" value="${action.deadline}" class="w-24 text-[8px] outline-none border-l px-1">
+                                                                <select onchange="updateAction(${row.id}, ${action.id}, 'status', this.value)" class="w-24 text-[8pt] outline-none font-bold border-l bg-transparent cursor-pointer text-center ${getStatusClass(action.status)}">
+                                                                    <option value="Not Started" ${action.status === 'Not Started' ? 'selected' : ''}>${t.statusNotStarted}</option>
+                                                                    <option value="In Progress" ${action.status === 'In Progress' ? 'selected' : ''}>${t.statusInProgress}</option>
+                                                                    <option value="Completed" ${action.status === 'Completed' ? 'selected' : ''}>${t.statusCompleted}</option>
+                                                                    <option value="Cancelled" ${action.status === 'Cancelled' ? 'selected' : ''}>${t.statusCancelled}</option>
+                                                                </select>
+                                                                <button onclick="removeAction(${row.id}, ${action.id})" class="no-print text-slate-300 hover:text-red-500"><i data-lucide="minus-circle" class="w-3.5 h-3.5"></i></button>
+                                                            </div>
+                                                        `).join('')}
+                                                        <button onclick="addAction(${row.id})" class="no-print mt-1 text-[8.5px] font-bold text-slate-500 flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> ${t.btnAddAction}</button>
+                                                    </div>
+                                                </td>
+                                                <td class="no-print p-2 text-center align-middle border-l border-slate-300">
+                                                    <button onclick="removeRow(${row.id})" class="text-slate-300 hover:text-red-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
 
                         <!-- Footer -->
                         <div class="mt-8 flex flex-col gap-6">
@@ -236,16 +246,13 @@
                                     INCREASING CONSEQUENCE (C) <i data-lucide="arrow-right" class="w-3 h-3 ml-1 transform rotate-90"></i>
                                 </div>
                                 <div class="grid grid-cols-6 gap-1.5" dir="ltr">
-                                    <!-- Matrix Content -->
                                     ${[5,4,3,2,1].map(c => `
                                         <div class="flex items-center justify-center font-black text-xl text-red-600 w-10">${c}</div>
                                         ${[1,2,3,4,5].map(l => {
                                             const score = l * c;
-                                            return `<button onclick="setScore(${l}, ${c})" class="aspect-square w-14 h-14 rounded-md shadow-sm font-black text-2xl transition-all hover:scale-110 hover:z-10 ${getRiskColor(score)} flex items-center justify-center">${score}</button>`;
+                                            return `<button onclick="setScore(${l}, ${c})" class="aspect-square w-14 h-14 rounded-md shadow-sm font-black text-2xl transition-all hover:scale-110 ${getRiskColor(score)} flex items-center justify-center">${score}</button>`;
                                         }).join('')}
                                     `).join('')}
-                                    
-                                    <!-- X Axis numbers -->
                                     <div></div>
                                     ${[1,2,3,4,5].map(l => `<div class="text-center font-black text-xl text-indigo-800 pt-3">${l}</div>`).join('')}
                                 </div>
@@ -255,29 +262,13 @@
                             </div>
                         </div>
                         
-                        <!-- Legend Panel -->
                         <div class="w-full md:w-80 bg-slate-50 p-8 border-l border-slate-200 space-y-5">
                             <h4 class="font-bold text-xs uppercase text-slate-400 tracking-widest mb-2">Risk Levels</h4>
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-11 risk-stop rounded flex items-center justify-center font-black text-lg">20-25</div>
-                                <div class="text-[10px] font-bold leading-tight">STOP activity<br><span class="font-normal text-slate-500">Stop activity and immediate action</span></div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-11 risk-urgent rounded flex items-center justify-center font-black text-lg">15-16</div>
-                                <div class="text-[10px] font-bold leading-tight">URGENT action<br><span class="font-normal text-slate-500">Take immediate action / stop if needed</span></div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-11 risk-action rounded flex items-center justify-center font-black text-lg">8-12</div>
-                                <div class="text-[10px] font-bold leading-tight">ACTION required<br><span class="font-normal text-slate-500">Improve within specified timescale</span></div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-11 risk-monitor rounded flex items-center justify-center font-black text-lg text-black">3-6</div>
-                                <div class="text-[10px] font-bold leading-tight">MONITOR review<br><span class="font-normal text-slate-500">Look to improve at next review</span></div>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-11 risk-none rounded flex items-center justify-center font-black text-lg text-white">1-2</div>
-                                <div class="text-[10px] font-bold leading-tight">NO action<br><span class="font-normal text-slate-500">No further action; maintain controls</span></div>
-                            </div>
+                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-stop rounded flex items-center justify-center font-black">20-25</div><div class="text-[10px] font-bold">STOP activity</div></div>
+                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-urgent rounded flex items-center justify-center font-black">15-16</div><div class="text-[10px] font-bold">URGENT action</div></div>
+                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-action rounded flex items-center justify-center font-black">8-12</div><div class="text-[10px] font-bold">ACTION required</div></div>
+                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-monitor rounded flex items-center justify-center font-black">3-6</div><div class="text-[10px] font-bold">MONITOR review</div></div>
+                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-none rounded flex items-center justify-center font-black text-white">1-2</div><div class="text-[10px] font-bold">NO action</div></div>
                         </div>
                     </div>
                 </div>` : ''}
@@ -288,70 +279,18 @@
         // Functions
         function updateHeader(f, v) { state.headerInfo[f] = v; }
         function updateRow(id, f, v) { state.rows = state.rows.map(r => r.id === id ? {...r, [f]: v} : r); }
-        function updateAction(rId, aId, f, v) { 
-            state.rows = state.rows.map(r => { 
-                if(r.id === rId) r.actions = r.actions.map(a => a.id === aId ? {...a, [f]: v} : a); 
-                return r; 
-            }); 
-            render(); 
-        }
-        function addAction(rId) { 
-            state.rows = state.rows.map(r => { 
-                if(r.id === rId) r.actions.push({ id: Date.now(), desc: '', owner: '', status: 'Not Started' }); 
-                return r; 
-            }); 
-            render(); 
-        }
-        function removeAction(rId, aId) { 
-            state.rows = state.rows.map(r => { 
-                if(r.id === rId && r.actions.length > 1) r.actions = r.actions.filter(a => a.id !== aId); 
-                return r; 
-            }); 
-            render(); 
-        }
-        function addRow() { 
-            state.rows.push({ 
-                id: Date.now(), hazard: '', who: '', how: '', existingControls: '', 
-                initialL: 1, initialC: 1, additionalControls: '', residualL: 1, residualC: 1, 
-                actions: [{ id: Date.now(), desc: '', owner: '', status: 'Not Started' }], 
-                actionDeadline: '' 
-            }); 
-            render(); 
-        }
+        function updateAction(rId, aId, f, v) { state.rows = state.rows.map(r => { if(r.id === rId) r.actions = r.actions.map(a => a.id === aId ? {...a, [f]: v} : a); return r; }); render(); }
+        function addAction(rId) { state.rows = state.rows.map(r => { if(r.id === rId) r.actions.push({ id: Date.now(), desc: '', owner: '', status: 'Not Started' }); return r; }); render(); }
+        function removeAction(rId, aId) { state.rows = state.rows.map(r => { if(r.id === rId && r.actions.length > 1) r.actions = r.actions.filter(a => a.id !== aId); return r; }); render(); }
+        function addRow() { state.rows.push({ id: Date.now(), hazard: '', who: '', how: '', existingControls: '', initialL: 1, initialC: 1, additionalControls: '', residualL: 1, residualC: 1, actions: [{ id: Date.now(), desc: '', owner: '', status: 'Not Started' }] }); render(); }
         function removeRow(id) { if(state.rows.length > 1) { state.rows = state.rows.filter(r => r.id !== id); render(); } }
         function openModal(rId, type) { state.modal = { rId, type }; render(); }
         function closeModal() { state.modal = null; render(); }
-        function setScore(l, c) { 
-            const { rId, type } = state.modal; 
-            state.rows = state.rows.map(r => r.id === rId ? {...r, [type+'L']: l, [type+'C']: c} : r); 
-            closeModal(); 
-        }
+        function setScore(l, c) { const { rId, type } = state.modal; state.rows = state.rows.map(r => r.id === rId ? {...r, [type+'L']: l, [type+'C']: c} : r); closeModal(); }
         function toggleLang() { state.lang = state.lang === 'en' ? 'ar' : 'en'; render(); }
         
-        function exportJson() { 
-            const d = JSON.stringify(state); 
-            const b = new Blob([d], {type: 'application/json'}); 
-            const a = document.createElement('a'); 
-            a.href = URL.createObjectURL(b); 
-            a.download = `Risk_Data_${new Date().toISOString().split('T')[0]}.json`; 
-            a.click(); 
-        }
-        
-        function importJson(e) { 
-            const f = e.target.files[0]; 
-            if(!f) return; 
-            const r = new FileReader(); 
-            r.onload = (ev) => { 
-                try { 
-                    Object.assign(state, JSON.parse(ev.target.result)); 
-                    render(); 
-                } catch { 
-                    alert("Invalid file format"); 
-                } 
-            }; 
-            r.readAsText(f); 
-            e.target.value = ''; 
-        }
+        function exportJson() { const d = JSON.stringify(state); const b = new Blob([d], {type: 'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Risk_Data_${new Date().toISOString().split('T')[0]}.json`; a.click(); }
+        function importJson(e) { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = (ev) => { try { Object.assign(state, JSON.parse(ev.target.result)); render(); } catch { alert("Invalid file"); } }; r.readAsText(f); e.target.value = ''; }
 
         function generateExportHTML() {
             const t = translations[state.lang];
@@ -364,8 +303,8 @@
                     .header { background: #d1d5db; font-weight: bold; text-align: center; }
                     .risk-stop { background: #dc2626; color: white; }
                     .risk-urgent { background: #f97316; color: white; }
-                    .risk-action { background: #facc15; color: black; }
-                    .risk-monitor { background: #4ade80; color: black; }
+                    .risk-action { background: #facc15; }
+                    .risk-monitor { background: #4ade80; }
                     .risk-none { background: #16a34a; color: white; }
                 </style></head>
                 <body>
@@ -373,33 +312,26 @@
                     <table>
                         <tr><td><b>${t.owner}</b>: ${state.headerInfo.owner}</td><td><b>${t.workActivity}</b>: ${state.headerInfo.workActivity}</td><td><b>${t.participants}</b>: ${state.headerInfo.participants}</td></tr>
                         <tr><td><b>${t.description}</b>: ${state.headerInfo.description}</td><td><b>${t.raNumber}</b>: ${state.headerInfo.raNumber}</td><td><b>${t.assessDate}</b>: ${state.headerInfo.assessDate}</td></tr>
-                        <tr><td><b style="color:red">Review Date</b>: ${state.headerInfo.reviewDate}</td><td></td><td></td></tr>
+                        <tr><td><b>Review Date</b>: ${state.headerInfo.reviewDate}</td><td></td><td></td></tr>
                     </table><br/>
                     <table>
                         <tr class="header">
                             <th rowspan="2">${t.colHazard}</th><th rowspan="2">${t.colWho}</th><th rowspan="2">${t.colHow}</th><th rowspan="2">${t.colControls}</th>
-                            <th colspan="3">${t.colRating}</th><th rowspan="2">${t.colAddControls}</th><th colspan="3">${t.colResidual}</th><th colspan="2">Action Plan</th>
+                            <th colspan="3">${t.colRating}</th><th rowspan="2">${t.colAddControls}</th><th colspan="3">${t.colResidual}</th><th rowspan="2">${t.colActionPlan}</th>
                         </tr>
-                        <tr class="header"><th>L</th><th>C</th><th>R</th><th>L</th><th>C</th><th>R</th><th>By Whom</th><th>By When</th></tr>
-                        ${state.rows.map(r => {
-                            const r1 = Number(r.initialL) * Number(r.initialC);
-                            const r2 = Number(r.residualL) * Number(r.residualC);
-                            return `
-                                <tr>
-                                    <td>${r.hazard}</td><td>${r.who}</td><td>${r.how}</td><td>${r.existingControls}</td>
-                                    <td align="center">${r.initialL}</td><td align="center">${r.initialC}</td>
-                                    <td align="center" style="background-color: ${getColorHex(r1)}; color: ${r1 >= 15 ? 'white' : 'black'}">${r1}</td>
-                                    <td>${r.additionalControls}</td>
-                                    <td align="center">${r.residualL}</td><td align="center">${r.residualC}</td>
-                                    <td align="center" style="background-color: ${getColorHex(r2)}; color: ${r2 >= 15 ? 'white' : 'black'}">${r2}</td>
-                                    <td>${r.actions.map(a => `• ${a.owner} (${a.status})`).join('<br>')}</td>
-                                    <td>${r.actionDeadline || ''}</td>
-                                </tr>
-                            `;
-                        }).join('')}
+                        <tr class="header"><th>L</th><th>C</th><th>R</th><th>L</th><th>C</th><th>R</th></tr>
+                        ${state.rows.map(r => `
+                            <tr>
+                                <td>${r.hazard}</td><td>${r.who}</td><td>${r.how}</td><td>${r.existingControls}</td>
+                                <td align="center">${r.initialL}</td><td align="center">${r.initialC}</td>
+                                <td align="center" style="background-color: ${getColorHex(r.initialL * r.initialC)}; color: ${r.initialL * r.initialC >= 15 ? 'white' : 'black'}">${r.initialL * r.initialC}</td>
+                                <td>${r.additionalControls}</td>
+                                <td align="center">${r.residualL}</td><td align="center">${r.residualC}</td>
+                                <td align="center" style="background-color: ${getColorHex(r.residualL * r.residualC)}; color: ${r.residualL * r.residualC >= 15 ? 'white' : 'black'}">${r.residualL * r.residualC}</td>
+                                <td>${r.actions.map(a => `• ${a.desc} [${a.owner}] (${a.status})`).join('<br>')}</td>
+                            </tr>
+                        `).join('')}
                     </table>
-                    <br/><br/>
-                    <div style="font-weight:bold; font-size:10pt;">Signature: __________________________</div>
                 </body></html>`;
         }
 

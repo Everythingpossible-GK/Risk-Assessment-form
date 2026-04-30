@@ -37,8 +37,9 @@
         }
     </style>
 </head>
-<body>
-    <div id="app" class="p-4 md:p-8 print:p-0"></div>
+<body class="transition-all duration-300">
+
+    <div id="app" class="p-2 md:p-8 print:p-0"></div>
 
     <script>
         const translations = {
@@ -110,39 +111,42 @@
             document.body.dir = t.dir;
 
             app.innerHTML = `
-                <div id="main-container" class="max-w-[99%] mx-auto bg-white shadow-xl rounded-lg overflow-hidden print:shadow-none">
-                    <div class="bg-slate-900 p-4 text-white flex flex-wrap gap-3 items-center justify-between no-print">
-                        <div class="flex items-center gap-2 text-xl font-bold"><i data-lucide="shield-check" class="text-green-400"></i> ${t.title}</div>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="toggleLang()" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold transition-colors">${state.lang === 'en' ? 'العربية' : 'English'}</button>
-                            <button onclick="window.print()" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded text-xs font-bold transition-colors">${t.btnPrint}</button>
-                            <button onclick="exportXls()" class="px-3 py-2 bg-green-600 hover:bg-green-700 rounded text-xs font-bold transition-colors">${t.btnExcel}</button>
-                            <button onclick="exportDoc()" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 rounded text-xs font-bold transition-colors">${t.btnWord}</button>
-                            <button onclick="exportJson()" class="px-3 py-2 bg-slate-600 hover:bg-slate-500 rounded text-xs font-bold transition-colors">${t.btnSaveJson}</button>
-                            <button onclick="document.getElementById('json-input').click()" class="px-3 py-2 bg-slate-600 hover:bg-slate-500 rounded text-xs font-bold transition-colors">${t.btnLoadJson}</button>
+                <div id="main-container" class="max-w-[99%] mx-auto bg-white shadow-xl rounded-lg overflow-hidden print:shadow-none mb-10">
+                    
+                    <!-- Toolbar -->
+                    <div class="bg-slate-900 p-3 text-white flex flex-col md:flex-row gap-3 items-center justify-between no-print">
+                        <div class="flex items-center gap-2 text-lg font-bold">
+                            <i data-lucide="shield-check" class="text-green-400"></i> ${t.title}
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button onclick="toggleLang()" class="px-2 py-1.5 bg-slate-700 hover:bg-slate-600 rounded text-[10px] font-bold transition-colors uppercase">${state.lang === 'en' ? 'العربية' : 'English'}</button>
+                            <button onclick="window.print()" class="px-2 py-1.5 bg-blue-600 hover:bg-blue-700 rounded text-[10px] font-bold transition-colors uppercase">${t.btnPrint}</button>
+                            <button onclick="exportXls()" class="px-2 py-1.5 bg-green-600 hover:bg-green-700 rounded text-[10px] font-bold transition-colors uppercase">${t.btnExcel}</button>
+                            <button onclick="exportJson()" class="px-2 py-1.5 bg-slate-600 hover:bg-slate-500 rounded text-[10px] font-bold transition-colors uppercase">${t.btnSaveJson}</button>
+                            <button onclick="document.getElementById('json-input').click()" class="px-2 py-1.5 bg-slate-600 hover:bg-slate-500 rounded text-[10px] font-bold transition-colors uppercase">${t.btnLoadJson}</button>
                             <input type="file" id="json-input" class="hidden" accept=".json" onchange="importJson(event)">
                         </div>
                     </div>
 
-                    <div id="printable-area" class="p-6">
-                        <h1 class="text-2xl font-black text-slate-800 uppercase mb-6">${t.formTitle}</h1>
+                    <div id="printable-area" class="p-4 md:p-6">
+                        <h1 class="text-xl md:text-2xl font-black text-slate-800 uppercase mb-6 text-center md:text-start">${t.formTitle}</h1>
                         
-                        <!-- Header Row 1: Owner | Work Activity | Participants -->
-                        <div class="grid grid-cols-3 gap-6 mb-4">
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.owner}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.owner}" onchange="updateHeader('owner', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.workActivity}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.workActivity}" onchange="updateHeader('workActivity', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.participants}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.participants}" onchange="updateHeader('participants', this.value)"></div>
+                        <!-- Header Form Fields -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-4">
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.owner}</label><input class="w-full border-b border-slate-200 outline-none py-1.5" value="${state.headerInfo.owner}" onchange="updateHeader('owner', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.workActivity}</label><input class="w-full border-b border-slate-200 outline-none py-1.5" value="${state.headerInfo.workActivity}" onchange="updateHeader('workActivity', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.participants}</label><input class="w-full border-b border-slate-200 outline-none py-1.5" value="${state.headerInfo.participants}" onchange="updateHeader('participants', this.value)"></div>
                         </div>
 
-                        <!-- Header Row 2: Description | RA Number | Dates -->
-                        <div class="grid grid-cols-4 gap-6 mb-8">
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.description}</label><input class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.description}" onchange="updateHeader('description', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.raNumber}</label><input class="w-full border-b border-slate-200 outline-none py-1 font-bold" value="${state.headerInfo.raNumber}" onchange="updateHeader('raNumber', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.assessDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1" value="${state.headerInfo.assessDate}" onchange="updateHeader('assessDate', this.value)"></div>
-                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest text-red-600">${t.reviewDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1 text-red-600 font-bold" value="${state.headerInfo.reviewDate}" onchange="updateHeader('reviewDate', this.value)"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.description}</label><input class="w-full border-b border-slate-200 outline-none py-1.5" value="${state.headerInfo.description}" onchange="updateHeader('description', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.raNumber}</label><input class="w-full border-b border-slate-200 outline-none py-1.5 font-bold" value="${state.headerInfo.raNumber}" onchange="updateHeader('raNumber', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest">${t.assessDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1.5" value="${state.headerInfo.assessDate}" onchange="updateHeader('assessDate', this.value)"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest text-red-600">${t.reviewDate}</label><input type="date" class="w-full border-b border-slate-200 outline-none py-1.5 text-red-600 font-bold" value="${state.headerInfo.reviewDate}" onchange="updateHeader('reviewDate', this.value)"></div>
                         </div>
 
-                        <div class="overflow-x-auto">
+                        <!-- DESKTOP TABLE VIEW -->
+                        <div class="hidden md:block overflow-x-auto">
                             <table class="w-full border-collapse border border-slate-300 text-[10.5px]">
                                 <thead class="bg-slate-200 uppercase font-bold text-[8.5px]">
                                     <tr>
@@ -162,70 +166,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${state.rows.map(row => {
-                                        const r1 = Number(row.initialL) * Number(row.initialC);
-                                        const r2 = Number(row.residualL) * Number(row.residualC);
-                                        return `
-                                            <tr class="align-top hover:bg-slate-50 transition-colors">
-                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'hazard', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.hazard}</textarea></td>
-                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'who', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.who}</textarea></td>
-                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'how', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.how}</textarea></td>
-                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.existingControls}</textarea></td>
-                                                
-                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialL}</td>
-                                                <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialC}</td>
-                                                <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r1)}">${r1}</td>
-
-                                                <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.additionalControls}</textarea></td>
-
-                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualL}</td>
-                                                <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualC}</td>
-                                                <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r2)}">${r2}</td>
-
-                                                <!-- Action Plan Column -->
-                                                <td class="border border-slate-300 p-1 bg-slate-50/40 text-center align-middle">
-                                                    <div class="flex bg-slate-200 p-1 text-[7px] font-bold text-slate-600 rounded mb-1.5 mx-auto max-w-[440px]">
-                                                        <div class="flex-1 px-1">${t.actionDesc}</div>
-                                                        <div class="w-20 px-1">${t.actionOwner}</div>
-                                                        <div class="w-24 px-1">${t.actionDeadline}</div>
-                                                        <div class="w-24 px-1">${t.actionStatus}</div>
-                                                        <div class="w-6 no-print"></div>
-                                                    </div>
-                                                    <div class="flex flex-col items-center">
-                                                        ${row.actions.map(action => `
-                                                            <div class="flex flex-row items-center gap-1 p-1 bg-white border border-slate-200 rounded-sm mb-1 w-full max-w-[440px]">
-                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'desc', this.value)" value="${action.desc}" class="flex-1 text-[9px] outline-none">
-                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'owner', this.value)" value="${action.owner}" class="w-20 text-[9px] outline-none border-l text-center">
-                                                                <input onchange="updateAction(${row.id}, ${action.id}, 'deadline', this.value)" type="date" value="${action.deadline}" class="w-24 text-[8px] outline-none border-l px-1">
-                                                                <select onchange="updateAction(${row.id}, ${action.id}, 'status', this.value)" class="w-24 text-[8pt] outline-none font-bold border-l bg-transparent cursor-pointer text-center ${getStatusClass(action.status)}">
-                                                                    <option value="Not Started" ${action.status === 'Not Started' ? 'selected' : ''}>${t.statusNotStarted}</option>
-                                                                    <option value="In Progress" ${action.status === 'In Progress' ? 'selected' : ''}>${t.statusInProgress}</option>
-                                                                    <option value="Completed" ${action.status === 'Completed' ? 'selected' : ''}>${t.statusCompleted}</option>
-                                                                    <option value="Cancelled" ${action.status === 'Cancelled' ? 'selected' : ''}>${t.statusCancelled}</option>
-                                                                </select>
-                                                                <button onclick="removeAction(${row.id}, ${action.id})" class="no-print text-slate-300 hover:text-red-500"><i data-lucide="minus-circle" class="w-3.5 h-3.5"></i></button>
-                                                            </div>
-                                                        `).join('')}
-                                                        <button onclick="addAction(${row.id})" class="no-print mt-1 text-[8.5px] font-bold text-slate-500 flex items-center gap-1"><i data-lucide="plus" class="w-3 h-3"></i> ${t.btnAddAction}</button>
-                                                    </div>
-                                                </td>
-                                                <td class="no-print p-2 text-center align-middle border-l border-slate-300">
-                                                    <button onclick="removeRow(${row.id})" class="text-slate-300 hover:text-red-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                                                </td>
-                                            </tr>
-                                        `;
-                                    }).join('')}
+                                    ${renderDesktopRows(t)}
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- MOBILE FORM SHEET VIEW -->
+                        <div class="md:hidden space-y-6">
+                            ${renderMobileCards(t)}
                         </div>
 
                         <!-- Footer -->
                         <div class="mt-8 flex flex-col gap-6">
                             <div class="w-full">
                                 <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">${t.signAssessor}</label>
-                                <div class="w-96 border-b border-black h-8"></div>
+                                <div class="w-full md:w-96 border-b border-black h-8"></div>
                             </div>
-                            <button onclick="addRow()" class="bg-slate-900 text-white px-6 py-2.5 rounded font-bold text-xs no-print w-fit transition-all hover:bg-slate-800 shadow-md flex items-center gap-2">
+                            <button onclick="addRow()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-sm no-print w-full md:w-fit transition-all hover:bg-slate-800 shadow-md flex items-center justify-center gap-2">
                                 <i data-lucide="plus" class="w-4 h-4"></i> ${t.btnAddRow}
                             </button>
                         </div>
@@ -234,41 +191,44 @@
 
                 <!-- Risk Matrix Modal -->
                 ${state.modal ? `
-                <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 no-print backdrop-blur-sm">
-                    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full flex flex-col md:flex-row overflow-hidden border border-slate-200">
-                        <div class="flex-1 p-8">
+                <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-2 md:p-4 no-print backdrop-blur-sm">
+                    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full flex flex-col md:flex-row overflow-y-auto max-h-[95vh] border border-slate-200">
+                        <div class="flex-1 p-4 md:p-8">
                             <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-bold text-xl uppercase text-slate-800 tracking-tight">${t.matrixTitle}</h3>
-                                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+                                <h3 class="font-bold text-lg md:text-xl uppercase text-slate-800 tracking-tight">${t.matrixTitle}</h3>
+                                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-2"><i data-lucide="x" class="w-6 h-6"></i></button>
                             </div>
                             <div class="flex gap-4">
-                                <div class="flex items-center font-bold text-[10px] text-slate-400 vertical-text" style="writing-mode: vertical-lr; transform: rotate(180deg);">
+                                <div class="flex items-center font-bold text-[8px] md:text-[10px] text-slate-400 vertical-text shrink-0" style="writing-mode: vertical-lr; transform: rotate(180deg);">
                                     INCREASING CONSEQUENCE (C) <i data-lucide="arrow-right" class="w-3 h-3 ml-1 transform rotate-90"></i>
                                 </div>
-                                <div class="grid grid-cols-6 gap-1.5" dir="ltr">
-                                    ${[5,4,3,2,1].map(c => `
-                                        <div class="flex items-center justify-center font-black text-xl text-red-600 w-10">${c}</div>
-                                        ${[1,2,3,4,5].map(l => {
-                                            const score = l * c;
-                                            return `<button onclick="setScore(${l}, ${c})" class="aspect-square w-14 h-14 rounded-md shadow-sm font-black text-2xl transition-all hover:scale-110 ${getRiskColor(score)} flex items-center justify-center">${score}</button>`;
-                                        }).join('')}
-                                    `).join('')}
-                                    <div></div>
-                                    ${[1,2,3,4,5].map(l => `<div class="text-center font-black text-xl text-indigo-800 pt-3">${l}</div>`).join('')}
+                                <div class="flex-1">
+                                    <div class="grid grid-cols-6 gap-1 md:gap-1.5" dir="ltr">
+                                        ${[5,4,3,2,1].map(c => `
+                                            <div class="flex items-center justify-center font-black text-sm md:text-xl text-red-600 w-6 md:w-10">${c}</div>
+                                            ${[1,2,3,4,5].map(l => {
+                                                const score = l * c;
+                                                return `<button onclick="setScore(${l}, ${c})" class="aspect-square rounded-md shadow-sm font-black text-lg md:text-2xl transition-all hover:scale-110 ${getRiskColor(score)} flex items-center justify-center">${score}</button>`;
+                                            }).join('')}
+                                        `).join('')}
+                                        <div></div>
+                                        ${[1,2,3,4,5].map(l => `<div class="text-center font-black text-sm md:text-xl text-indigo-800 pt-3">${l}</div>`).join('')}
+                                    </div>
+                                    <div class="text-center font-bold text-[8px] md:text-[10px] text-slate-400 mt-6 uppercase flex items-center justify-center gap-2">
+                                        INCREASING LIKELIHOOD (L) <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="text-center font-bold text-[10px] text-slate-400 mt-8 uppercase flex items-center justify-center gap-2">
-                                INCREASING LIKELIHOOD (L) <i data-lucide="arrow-right" class="w-3 h-3"></i>
                             </div>
                         </div>
                         
-                        <div class="w-full md:w-80 bg-slate-50 p-8 border-l border-slate-200 space-y-5">
-                            <h4 class="font-bold text-xs uppercase text-slate-400 tracking-widest mb-2">Risk Levels</h4>
-                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-stop rounded flex items-center justify-center font-black">20-25</div><div class="text-[10px] font-bold">STOP activity</div></div>
-                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-urgent rounded flex items-center justify-center font-black">15-16</div><div class="text-[10px] font-bold">URGENT action</div></div>
-                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-action rounded flex items-center justify-center font-black">8-12</div><div class="text-[10px] font-bold">ACTION required</div></div>
-                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-monitor rounded flex items-center justify-center font-black">3-6</div><div class="text-[10px] font-bold">MONITOR review</div></div>
-                            <div class="flex items-center gap-4"><div class="w-14 h-11 risk-none rounded flex items-center justify-center font-black text-white">1-2</div><div class="text-[10px] font-bold">NO action</div></div>
+                        <div class="w-full md:w-80 bg-slate-50 p-4 md:p-8 border-t md:border-t-0 md:border-l border-slate-200 space-y-4">
+                            <h4 class="font-bold text-[10px] uppercase text-slate-400 tracking-widest mb-2">Risk Levels</h4>
+                            ${[ {s:'20-25', c:'risk-stop', t:'STOP'}, {s:'15-16', c:'risk-urgent', t:'URGENT'}, {s:'8-12', c:'risk-action', t:'ACTION'}, {s:'3-6', c:'risk-monitor', t:'MONITOR'}, {s:'1-2', c:'risk-none', t:'NO ACTION'} ].map(item => `
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-9 ${item.c} rounded flex items-center justify-center font-black text-sm">${item.s}</div>
+                                    <div class="text-[10px] font-bold uppercase">${item.t}</div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                 </div>` : ''}
@@ -276,13 +236,178 @@
             lucide.createIcons();
         }
 
-        // Functions
+        function renderDesktopRows(t) {
+            return state.rows.map(row => {
+                const r1 = Number(row.initialL) * Number(row.initialC);
+                const r2 = Number(row.residualL) * Number(row.residualC);
+                return `
+                    <tr class="align-top hover:bg-slate-50 transition-colors">
+                        <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'hazard', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.hazard}</textarea></td>
+                        <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'who', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.who}</textarea></td>
+                        <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'how', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.how}</textarea></td>
+                        <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.existingControls}</textarea></td>
+                        <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialL}</td>
+                        <td onclick="openModal(${row.id}, 'initial')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.initialC}</td>
+                        <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r1)}">${r1}</td>
+                        <td class="border border-slate-300 p-1"><textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" class="w-full bg-transparent outline-none p-1" rows="6">${row.additionalControls}</textarea></td>
+                        <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualL}</td>
+                        <td onclick="openModal(${row.id}, 'residual')" class="border border-slate-300 text-center font-bold cursor-pointer hover:bg-blue-50 align-middle">${row.residualC}</td>
+                        <td class="border border-slate-300 text-center font-black align-middle ${getRiskColor(r2)}">${r2}</td>
+                        <td class="border border-slate-300 p-1 bg-slate-50/40 text-center align-middle">
+                            ${renderActionPlanSubtable(row, t)}
+                        </td>
+                        <td class="no-print p-2 text-center align-middle border-l border-slate-300">
+                            <button onclick="removeRow(${row.id})" class="text-slate-300 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderMobileCards(t) {
+            return state.rows.map((row, index) => {
+                const r1 = Number(row.initialL) * Number(row.initialC);
+                const r2 = Number(row.residualL) * Number(row.residualC);
+                return `
+                    <div class="bg-white border-2 border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-slate-100 px-4 py-2 flex justify-between items-center border-b border-slate-200">
+                            <span class="font-bold text-slate-600">Hazard #${index + 1}</span>
+                            <button onclick="removeRow(${row.id})" class="text-red-500 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">${t.colHazard}</label>
+                                <textarea onchange="updateRow(${row.id}, 'hazard', this.value)" class="w-full border rounded p-2 text-sm" rows="3">${row.hazard}</textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">${t.colWho}</label>
+                                    <textarea onchange="updateRow(${row.id}, 'who', this.value)" class="w-full border rounded p-2 text-sm" rows="2">${row.who}</textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">${t.colHow}</label>
+                                    <textarea onchange="updateRow(${row.id}, 'how', this.value)" class="w-full border rounded p-2 text-sm" rows="2">${row.how}</textarea>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">${t.colControls}</label>
+                                <textarea onchange="updateRow(${row.id}, 'existingControls', this.value)" class="w-full border rounded p-2 text-sm" rows="2">${row.existingControls}</textarea>
+                            </div>
+                            
+                            <!-- Mobile Risk Rating 1 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <label class="block text-[10px] font-bold text-slate-600 uppercase mb-3 text-center underline">${t.colRating}</label>
+                                <div class="flex items-center justify-between gap-2">
+                                    <div onclick="openModal(${row.id}, 'initial')" class="flex-1 bg-white border border-slate-300 rounded p-2 text-center cursor-pointer">
+                                        <div class="text-[8px] text-slate-400">LIKELIHOOD</div>
+                                        <div class="font-bold text-lg">${row.initialL}</div>
+                                    </div>
+                                    <div class="text-slate-300 font-bold">×</div>
+                                    <div onclick="openModal(${row.id}, 'initial')" class="flex-1 bg-white border border-slate-300 rounded p-2 text-center cursor-pointer">
+                                        <div class="text-[8px] text-slate-400">CONSEQUENCE</div>
+                                        <div class="font-bold text-lg">${row.initialC}</div>
+                                    </div>
+                                    <div class="text-slate-300 font-bold">=</div>
+                                    <div class="flex-1 ${getRiskColor(r1)} rounded p-2 text-center shadow-inner">
+                                        <div class="text-[8px] opacity-70">RATING</div>
+                                        <div class="font-black text-xl">${r1}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">${t.colAddControls}</label>
+                                <textarea onchange="updateRow(${row.id}, 'additionalControls', this.value)" class="w-full border rounded p-2 text-sm" rows="2">${row.additionalControls}</textarea>
+                            </div>
+
+                            <!-- Mobile Risk Rating 2 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <label class="block text-[10px] font-bold text-slate-600 uppercase mb-3 text-center underline">${t.colResidual}</label>
+                                <div class="flex items-center justify-between gap-2">
+                                    <div onclick="openModal(${row.id}, 'residual')" class="flex-1 bg-white border border-slate-300 rounded p-2 text-center cursor-pointer">
+                                        <div class="text-[8px] text-slate-400">LIKELIHOOD</div>
+                                        <div class="font-bold text-lg">${row.residualL}</div>
+                                    </div>
+                                    <div class="text-slate-300 font-bold">×</div>
+                                    <div onclick="openModal(${row.id}, 'residual')" class="flex-1 bg-white border border-slate-300 rounded p-2 text-center cursor-pointer">
+                                        <div class="text-[8px] text-slate-400">CONSEQUENCE</div>
+                                        <div class="font-bold text-lg">${row.residualC}</div>
+                                    </div>
+                                    <div class="text-slate-300 font-bold">=</div>
+                                    <div class="flex-1 ${getRiskColor(r2)} rounded p-2 text-center shadow-inner">
+                                        <div class="text-[8px] opacity-70">RATING</div>
+                                        <div class="font-black text-xl">${r2}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Action Plan -->
+                            <div class="border-t border-slate-100 pt-4">
+                                <label class="block text-[11px] font-black text-slate-800 uppercase mb-3">${t.colActionPlan}</label>
+                                <div class="space-y-3">
+                                    ${row.actions.map(action => `
+                                        <div class="bg-white border rounded-lg p-3 shadow-sm relative">
+                                            <button onclick="removeAction(${row.id}, ${action.id})" class="absolute top-2 right-2 text-slate-300 hover:text-red-500"><i data-lucide="minus-circle" class="w-4 h-4"></i></button>
+                                            <div class="space-y-2">
+                                                <input onchange="updateAction(${row.id}, ${action.id}, 'desc', this.value)" value="${action.desc}" placeholder="${t.actionDesc}" class="w-full text-xs border-b outline-none pb-1">
+                                                <div class="flex gap-2">
+                                                    <input onchange="updateAction(${row.id}, ${action.id}, 'owner', this.value)" value="${action.owner}" placeholder="${t.actionOwner}" class="flex-1 text-xs border-b outline-none pb-1">
+                                                    <input onchange="updateAction(${row.id}, ${action.id}, 'deadline', this.value)" type="date" value="${action.deadline}" class="w-28 text-[9px] border-b outline-none pb-1">
+                                                </div>
+                                                <select onchange="updateAction(${row.id}, ${action.id}, 'status', this.value)" class="w-full text-[10px] font-bold p-1.5 rounded cursor-pointer ${getStatusClass(action.status)}">
+                                                    <option value="Not Started" ${action.status === 'Not Started' ? 'selected' : ''}>${t.statusNotStarted}</option>
+                                                    <option value="In Progress" ${action.status === 'In Progress' ? 'selected' : ''}>${t.statusInProgress}</option>
+                                                    <option value="Completed" ${action.status === 'Completed' ? 'selected' : ''}>${t.statusCompleted}</option>
+                                                    <option value="Cancelled" ${action.status === 'Cancelled' ? 'selected' : ''}>${t.statusCancelled}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                    <button onclick="addAction(${row.id})" class="w-full py-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-400 font-bold text-xs">+ ${t.btnAddAction}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderActionPlanSubtable(row, t) {
+            return `
+                <div class="flex bg-slate-200 p-1 text-[7px] font-bold text-slate-600 rounded mb-1.5 mx-auto max-w-[440px]">
+                    <div class="flex-1 px-1">${t.actionDesc}</div>
+                    <div class="w-20 px-1">${t.actionOwner}</div>
+                    <div class="w-24 px-1">${t.actionDeadline}</div>
+                    <div class="w-24 px-1">${t.actionStatus}</div>
+                    <div class="w-6 no-print"></div>
+                </div>
+                <div class="flex flex-col items-center">
+                    ${row.actions.map(action => `
+                        <div class="flex flex-row items-center gap-1 p-1 bg-white border border-slate-200 rounded-sm mb-1 w-full max-w-[440px]">
+                            <input onchange="updateAction(${row.id}, ${action.id}, 'desc', this.value)" value="${action.desc}" class="flex-1 text-[9px] outline-none">
+                            <input onchange="updateAction(${row.id}, ${action.id}, 'owner', this.value)" value="${action.owner}" class="w-20 text-[9px] outline-none border-l text-center">
+                            <input onchange="updateAction(${row.id}, ${action.id}, 'deadline', this.value)" type="date" value="${action.deadline}" class="w-24 text-[8px] outline-none border-l px-1">
+                            <select onchange="updateAction(${row.id}, ${action.id}, 'status', this.value)" class="w-24 text-[8pt] outline-none font-bold border-l bg-transparent cursor-pointer text-center ${getStatusClass(action.status)}">
+                                <option value="Not Started" ${action.status === 'Not Started' ? 'selected' : ''}>${t.statusNotStarted}</option>
+                                <option value="In Progress" ${action.status === 'In Progress' ? 'selected' : ''}>${t.statusInProgress}</option>
+                                <option value="Completed" ${action.status === 'Completed' ? 'selected' : ''}>${t.statusCompleted}</option>
+                                <option value="Cancelled" ${action.status === 'Cancelled' ? 'selected' : ''}>${t.statusCancelled}</option>
+                            </select>
+                            <button onclick="removeAction(${row.id}, ${action.id})" class="no-print text-slate-300 hover:text-red-500"><i data-lucide="minus-circle" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                    `).join('')}
+                    <button onclick="addAction(${row.id})" class="no-print mt-1 text-[8.5px] font-bold text-slate-500 flex items-center gap-1 transition-colors hover:text-blue-600"><i data-lucide="plus" class="w-3 h-3"></i> ${t.btnAddAction}</button>
+                </div>
+            `;
+        }
+
+        // --- Controller Logic (Unchanged) ---
         function updateHeader(f, v) { state.headerInfo[f] = v; }
         function updateRow(id, f, v) { state.rows = state.rows.map(r => r.id === id ? {...r, [f]: v} : r); }
         function updateAction(rId, aId, f, v) { state.rows = state.rows.map(r => { if(r.id === rId) r.actions = r.actions.map(a => a.id === aId ? {...a, [f]: v} : a); return r; }); render(); }
-        function addAction(rId) { state.rows = state.rows.map(r => { if(r.id === rId) r.actions.push({ id: Date.now(), desc: '', owner: '', status: 'Not Started' }); return r; }); render(); }
+        function addAction(rId) { state.rows = state.rows.map(r => { if(r.id === rId) r.actions.push({ id: Date.now(), desc: '', owner: '', deadline:'', status: 'Not Started' }); return r; }); render(); }
         function removeAction(rId, aId) { state.rows = state.rows.map(r => { if(r.id === rId && r.actions.length > 1) r.actions = r.actions.filter(a => a.id !== aId); return r; }); render(); }
-        function addRow() { state.rows.push({ id: Date.now(), hazard: '', who: '', how: '', existingControls: '', initialL: 1, initialC: 1, additionalControls: '', residualL: 1, residualC: 1, actions: [{ id: Date.now(), desc: '', owner: '', status: 'Not Started' }] }); render(); }
+        function addRow() { state.rows.push({ id: Date.now(), hazard: '', who: '', how: '', existingControls: '', initialL: 1, initialC: 1, additionalControls: '', residualL: 1, residualC: 1, actions: [{ id: Date.now(), desc: '', owner: '', deadline:'', status: 'Not Started' }] }); render(); }
         function removeRow(id) { if(state.rows.length > 1) { state.rows = state.rows.filter(r => r.id !== id); render(); } }
         function openModal(rId, type) { state.modal = { rId, type }; render(); }
         function closeModal() { state.modal = null; render(); }
